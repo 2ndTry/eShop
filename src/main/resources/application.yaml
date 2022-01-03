@@ -1,0 +1,16 @@
+  spring:
+    main:
+      allow-circular-references: true
+    datasource:
+      url: jdbc:postgresql://localhost/shop
+      username: postgres
+      password: postgres
+      driver-class-name: org.postgresql.Driver
+    jpa:
+      hibernate:
+        ddl-auto: validate
+      show-sql: true
+    flyway:
+      schemas: PUBLIC
+      enabled: false
+      baseline-on-migrate: true
