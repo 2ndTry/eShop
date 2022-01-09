@@ -5,5 +5,5 @@
 // Generated on: 2022.01.09 at 11:42:35 AM MSK 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://amiroshnikov.com/eshop/ws/greeting", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
-package com.amiroshnikov.eshop.ws.greeting;
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://amiroshnikov.com/eshop/ws/products", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+package com.amiroshnikov.eshop.ws.products;
