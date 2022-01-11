@@ -34,9 +34,10 @@ function sendContent() {
 //Рендер сообщения полученного от сервера
 function renderItem(productJSON) {
     var product = JSON.parse(productJSON.body);
-    $("#table").append("<tr>") +
-        "<td>" + product.title + "<td>" +
-        "<td>" + product.price + "<td>" +
+    $("#table").append("<tr>" +
+        "<td>" + product.title + "</td>" +
+        "<td>" + product.price + "</td>" +
         "<td><a href='/products'" + product.id + "/bucket'>Add to bucket</a></td>" +
         "</tr>");
+
 }
