@@ -2,11 +2,10 @@ package com.amiroshnikov.eshop.service;
 
 import com.amiroshnikov.eshop.dao.BucketRepository;
 import com.amiroshnikov.eshop.dao.ProductRepository;
-import com.amiroshnikov.eshop.domain.Bucket;
-import com.amiroshnikov.eshop.domain.Product;
-import com.amiroshnikov.eshop.domain.User;
+import com.amiroshnikov.eshop.domain.*;
 import com.amiroshnikov.eshop.dto.BucketDetailDto;
 import com.amiroshnikov.eshop.dto.BucketDto;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,11 +22,13 @@ public class BucketServiceImpl implements BucketService{
     private final BucketRepository bucketRepository;
     private final ProductRepository productRepository;
     private final UserService userService;
+    private final OrderService orderService;
 
-    public BucketServiceImpl(BucketRepository bucketRepository, ProductRepository productRepository, UserService userService) {
+    public BucketServiceImpl(BucketRepository bucketRepository, ProductRepository productRepository, UserService userService, OrderService orderService) {
         this.bucketRepository = bucketRepository;
         this.productRepository = productRepository;
         this.userService = userService;
+        this.orderService = orderService;
     }
 
     @Override
@@ -74,6 +75,42 @@ public class BucketServiceImpl implements BucketService{
         bucketDto.aggregate();
 
         return bucketDto;
+    }
+
+    @Override
+    @Transactional
+    public void commitBucketToOrder(String username) {
+        User user = userService.findByName(username);
+        if (user == null) {
+            throw new UsernameNotFoundException(String.format("User \"%s\" not found!", username));
+        }
+        Bucket bucket = user.getBucket();
+        if (bucket == null || bucket.getProducts().isEmpty()) {
+            return;
+        }
+
+        Order order = new Order();
+        order.setStatus(OrderStatus.NEW);
+        order.setUser(user);
+
+        Map<Product, Long> productWithAmount = bucket.getProducts().stream()
+                .collect(Collectors.groupingBy(product -> product, Collectors.counting()));
+
+        List<OrderDetails> orderDetails = productWithAmount.entrySet().stream()
+                .map(pair -> new OrderDetails(order, pair.getKey(), pair.getValue()))
+                .collect(Collectors.toList());
+
+        BigDecimal total = new BigDecimal(orderDetails.stream()
+                .map(detail -> detail.getPrice().multiply(detail.getAmount()))
+                .mapToDouble(BigDecimal::doubleValue).sum());
+
+        order.setDetails(orderDetails);
+        order.setSum(total);
+        order.setAddress("none");
+
+        orderService.saveOrder(order);
+        bucket.getProducts().clear();
+        bucketRepository.save(bucket);
     }
 
     private List<Product> getCollectRefProductsByIds(List<Long> productIds) {
