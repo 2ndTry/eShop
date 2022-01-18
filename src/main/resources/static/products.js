@@ -20,7 +20,8 @@ $(function () {
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
-    $( "#send" ).click(function() { sendContent(); });
+    $( "#send" ).click(function() {
+        sendContent(); });
  });
 
 //Отправка сообщений на сервер
@@ -39,5 +40,4 @@ function renderItem(productJSON) {
         "<td>" + product.price + "</td>" +
         "<td><a href='/products'" + product.id + "/bucket'>Add to bucket</a></td>" +
         "</tr>");
-
 }
