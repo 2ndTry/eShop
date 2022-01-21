@@ -71,6 +71,7 @@ public class UserController {
         return "profile";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/profile")
     public String updateProfileUser(UserDto dto, Model model, Principal principal) {
         if (principal == null || !Objects.equals(principal.getName(), dto.getUsername())) {
@@ -85,5 +86,12 @@ public class UserController {
         }
         userService.updateProfile(dto);
         return "redirect:/users/profile";
+    }
+
+    @GetMapping("/activate/{code}")
+    public String activateUser(Model model, @PathVariable("code") String activateCode) {
+        boolean activated = userService.activateUser(activateCode);
+        model.addAttribute("activated", activated);
+        return "activate-user";
     }
 }
