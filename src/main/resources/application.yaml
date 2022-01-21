@@ -2,18 +2,20 @@
     main:
       allow-circular-references: true
     datasource:
-      url: jdbc:postgresql://localhost/shop
-      username: postgres
-      password: postgres
+      url: jdbc:${DATABASE_PATH}
+      username: ${DATABASE_USER}
+      password: ${DATABASE_PASSWORD}
       driver-class-name: org.postgresql.Driver
     jpa:
       hibernate:
         ddl-auto: validate
       show-sql: true
     flyway:
-      schemas: PUBLIC
-      enabled: false
-      baseline-on-migrate: true
+      enabled: true
+  logging:
+    level:
+      org.springframework.web: DEBUG
+      org.springframework.ws: DEBUG
   server:
     hostname: localhost
     port: ${PORT:8080}
@@ -22,4 +24,4 @@
       host: smtp.gmail.com
       port: 587
       username: alexey041187@gmail.com
-      password: testPass123
+      password: ${hidden.email.password}
