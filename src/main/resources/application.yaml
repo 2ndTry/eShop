@@ -18,7 +18,7 @@
       org.springframework.ws: DEBUG
   server:
     hostname: localhost
-    port: ${PORT:8080}
+    port: ${PORT}
   mail:
     server:
       host: smtp.gmail.com
