@@ -12,4 +12,5 @@ public interface UserService extends UserDetailsService {
     List<UserDto> getAll();
     User findByName(String name);
     void updateProfile(UserDto userDto);
+    boolean activateUser(String activateCode);
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +31,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @javax.transaction.Transactional
     public boolean save(UserDto userDto) {
         if (!Objects.equals(userDto.getPassword(), userDto.getMatchingPassword())) {
             throw new RuntimeException("Password is not confirm!");
@@ -39,6 +41,7 @@ public class UserServiceImpl implements UserService {
                 .password(passwordEncoder.encode(userDto.getPassword()))
                 .email(userDto.getEmail())
                 .role(Role.CLIENT)
+                .activeCode(UUID.randomUUID().toString())
                 .build();
         userRepository.save(user);
         return true;
@@ -100,6 +103,15 @@ public class UserServiceImpl implements UserService {
         if (isChanged) {
             userRepository.save(savedUser);
         }
+    }
+
+    @Override
+    public boolean activateUser(String activateCode) {
+        User activateUser = userRepository.findFirstByActiveCode(activateCode);
+        if (activateUser.getActiveCode() != null) {
+            return true;
+        }
+        return false;
     }
 
     private UserDto toDto(User user) {

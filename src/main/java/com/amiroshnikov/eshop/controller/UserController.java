@@ -92,6 +92,6 @@ public class UserController {
     public String activateUser(Model model, @PathVariable("code") String activateCode) {
         boolean activated = userService.activateUser(activateCode);
         model.addAttribute("activated", activated);
-        return "activate-user";
+        return "active-user";
     }
 }
