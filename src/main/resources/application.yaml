@@ -8,9 +8,18 @@
       driver-class-name: org.postgresql.Driver
     jpa:
       hibernate:
-        ddl-auto: validate
+        ddl-auto: create-drop
       show-sql: true
     flyway:
       schemas: PUBLIC
       enabled: false
       baseline-on-migrate: true
+  server:
+    hostname: localhost
+    port: ${PORT:8080}
+  mail:
+    server:
+      host: smtp.gmail.com
+      port: 587
+      username: alexey041187@gmail.com
+      password: testPass123
