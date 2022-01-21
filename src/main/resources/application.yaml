@@ -16,6 +16,9 @@
     level:
       org.springframework.web: DEBUG
       org.springframework.ws: DEBUG
+  server:
+    hostname: localhost
+    port: ${PORT:8080}
   mail:
     server:
       host: smtp.gmail.com
